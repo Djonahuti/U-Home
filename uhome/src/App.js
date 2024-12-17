@@ -13,17 +13,12 @@ const Work = lazy(() => import("./components/Work"));
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");
-  const [isSidebarVisible, setSidebarVisible] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarVisible((prev) => !prev);
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const spinner = document.getElementById("spinner");
       if (spinner) spinner.classList.remove("show");
-    }, 1000);
+    }, 1000); // Adjust delay as needed
 
     return () => clearTimeout(timer);
   }, [currentPage]);
@@ -73,17 +68,9 @@ function App() {
 
   return (
     <div className="sb-nav-fixed">
-      <Navbar
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        toggleSidebar={toggleSidebar}
-      />
+      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <div id="layoutSidenav">
-        <Sidebar
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          isSidebarVisible={isSidebarVisible}
-        />
+        <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
         <div id="layoutSidenav_content">
           <main>
             <div className="container-fluid px-4">{renderContent()}</div>
