@@ -4,7 +4,7 @@ import ThemeToggle from "./ThemeToggle";
 function Navbar({ setCurrentPage }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <a className="navbar-brand" href="#">My Website</a>
+      <a className="navbar-brand" href="#!">My Website</a>
       <div className="collapse navbar-collapse">
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
