@@ -1,57 +1,84 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import Home from "./components/Home";
+import Spinner from "./components/Spinner"; // Import Spinner component
+
+const About = lazy(() => import("./components/About"));
+const Projects = lazy(() => import("./components/Projects"));
+const Contact = lazy(() => import("./components/Contact"));
+const Education = lazy(() => import("./components/Education"));
+const Certificate = lazy(() => import("./components/Certificate"));
+const Work = lazy(() => import("./components/Work"));
 
 function App() {
-    const [theme, setTheme] = useState(document.documentElement.getAttribute("data-theme"));
-    const [aboutContent, setAboutContent] = useState("");
-    const [projectsContent, setProjectsContent] = useState("");
+  const [currentPage, setCurrentPage] = useState("home");
 
-    // Function to toggle between light and dark themes
-    const toggleTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
-        setTheme(newTheme);
-        document.documentElement.setAttribute("data-theme", newTheme);
-    };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const spinner = document.getElementById("spinner");
+      if (spinner) spinner.classList.remove("show");
+    }, 1000); // Adjust delay as needed
 
-    // Simulate dynamic content loading for About and Projects sections
-    useEffect(() => {
-        // Fetch or dynamically set content for the About section
-        setAboutContent("Welcome to our landing page! We are excited to showcase our projects and skills here.");
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
-        // Fetch or dynamically set content for the Projects section
-        setProjectsContent("Project 1: React Dynamic Landing Page\nProject 2: API-driven Content Loader\nProject 3: Theme Switcher Demo");
-    }, []);
+  const renderContent = () => {
+    switch (currentPage) {
+      case "about":
+        return (
+          <Suspense fallback={<Spinner message="Loading About..." />}>
+            <About setCurrentPage={setCurrentPage} />
+          </Suspense>
+        );
+      case "projects":
+        return (
+          <Suspense fallback={<Spinner message="Loading Projects..." />}>
+            <Projects />
+          </Suspense>
+        );
+      case "contact":
+        return (
+          <Suspense fallback={<Spinner message="Loading Contact Form..." />}>
+            <Contact />
+          </Suspense>
+        );
+      case "education":
+        return (
+          <Suspense fallback={<Spinner message="Loading Educational Background..." />}>
+            <Education />
+          </Suspense>
+        );
+      case "certificate":
+        return (
+          <Suspense fallback={<Spinner message="Loading Certificates..." />}>
+            <Certificate />
+          </Suspense>
+        );
+      case "work":
+        return (
+          <Suspense fallback={<Spinner message="Loading Job Experience..." />}>
+            <Work />
+          </Suspense>
+        );
+      default:
+        return <Home />;
+    }
+  };
 
-    return (
-        <div className="App">
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container">
-                    <a className="navbar-brand" href="/">MyLandingPage</a>
-                    <button className="btn" onClick={toggleTheme}>
-                        <i className={`bi ${theme === "light" ? "bi-moon-fill" : "bi-sun-fill"}`}></i>
-                    </button>
-                </div>
-            </nav>
-            
-            <header className="container my-5 text-center">
-                <h1>Welcome to Our Site</h1>
-                <p>Your journey starts here.</p>
-            </header>
-            
-            <section className="container my-5">
-                <h2>About Us</h2>
-                <p>{aboutContent}</p>
-            </section>
-
-            <section className="container my-5">
-                <h2>Our Projects</h2>
-                <p>{projectsContent}</p>
-            </section>
-
-            <footer className="container text-center py-4">
-                <p>© 2024 MyLandingPage. All Rights Reserved.</p>
-            </footer>
+  return (
+    <div className="sb-nav-fixed">
+      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <div id="layoutSidenav">
+        <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <div id="layoutSidenav_content">
+          <main>
+            <div className="container-fluid px-4">{renderContent()}</div>
+          </main>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default App;
