@@ -1,4 +1,5 @@
 import React from "react";
+import ThemeToggle from "./ThemeToggle";
 
 function Navbar({ setCurrentPage }) {
   return (
@@ -14,6 +15,9 @@ function Navbar({ setCurrentPage }) {
           </li>
           <li className="nav-item">
             <button className="nav-link btn btn-link" onClick={() => setCurrentPage("projects")}>Projects</button>
+          </li>
+          <li className="nav-item">
+            <ThemeToggle />
           </li>
         </ul>
       </div>
